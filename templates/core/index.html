@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aasish Karki</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -16,10 +16,10 @@
             <h1>Aasish Karki</h1>
         </div>
         <nav class="nav-menu">
-            <a href="index.html" class="active">Home</a>
-            <a href="projects.html">Projects</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="{% url 'index' %}" class="active">Home</a>
+            <a href="{% url 'projects' %}">Projects</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
         </nav>
     </header>
 
@@ -38,7 +38,7 @@
 
         <!-- The image IS the shape now -->
         <div class="attraction">
-            <img src="hero.png" alt="Profile Image">
+            <img src="{% static 'images/hero.png' %}" alt="Profile Image">
         </div>
     </main>
     <script src="{% static 'js/main.js' %}"></script>

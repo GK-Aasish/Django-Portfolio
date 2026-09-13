@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects | Aasish Karki</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -15,10 +16,10 @@
             <h1>Aasish Karki</h1>
         </div>
         <nav class="nav-menu">
-            <a href="index.html">Home</a>
-            <a href="projects.html" class="active">Projects</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="{% url 'index' %}">Home</a>
+            <a href="{% url 'projects' %}" class="active">Projects</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
         </nav>
     </header>
 
@@ -43,23 +44,39 @@
         <section class="projects-showcase">
             <div class="projects-list">
 
-                <!-- Card 1 -->
+                <!-- Card -->
+                {% for project in projects %}
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="project1.png" alt="Project 1">
+                        {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.name }}">
+                        {% else %}
+                        <img src="{% static 'images/default_project.png' %}" alt="Default Project Image">
+                        {% endif %}
                     </div>
                     <div class="project-info">
-                        <div class="project-tags"><span>React</span><span>Three.js</span></div>
-                        <h2>E-Commerce Experience</h2>
-                        <p>A high-performance 3D shopping experience built for modern browsers.</p>
+                        <div class="project-tags">
+                            {% for tag in project.get_tags_list %}
+                            <span>{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        <h2>{{project.title}}</h2>
+                        <p>{{project.description}}</p>
                         <div class="project-links">
-                            <a href="#" class="btn-link">Live Demo</a>
-                            <a href="#" class="btn-github">GitHub</a>
+                            {% if project.live_demo_url %}
+                            <a href="{{ project.live_demo_url }}" class="btn-link" target="_blank">Live Demo</a>
+                            {% endif %}
+                            {% if project.github_url %}
+                            <a href="{{ project.github_url }}" class="btn-github" target="_blank">GitHub</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
+                {% empty %}
+                <p>No projects available.</p>
+                {% endfor %}
 
-                <!-- Card 2 -->
+                {% comment %} <!-- Card 2 -->
                 <div class="project-card">
                     <div class="project-image">
                         <img src="project2.png" alt="Project 2">
@@ -73,9 +90,9 @@
                             <a href="#" class="btn-github">GitHub</a>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
 
-                <!-- Card 3 -->
+                {% comment %} <!-- Card 3 -->
                 <div class="project-card">
                     <div class="project-image">
                         <img src="project3.png" alt="Project 3">
@@ -89,7 +106,7 @@
                             <a href="#" class="btn-github">GitHub</a>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
 
             </div>
         </section>

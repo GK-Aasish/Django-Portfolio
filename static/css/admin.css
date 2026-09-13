@@ -1,0 +1,443 @@
+/* =========================================================
+   1. VARIABLES & RESET
+========================================================= */
+:root {
+    --header-height: 80px;
+    --sidebar-width: 260px;
+    --primary: #ff4c60;
+    --bg-color: #fafafa; /* Light grey to make white cards pop */
+    --white: #ffffff;
+    --text-main: #111111;
+    --text-muted: #666666;
+    --border: #eeeeee;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-main);
+}
+
+/* =========================================================
+   2. SHARED HEADER (Matches your landing page)
+========================================================= */
+.logo-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    padding: 0 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--white);
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo span {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    border-radius: 50%;
+}
+
+.logo h1 {
+    font-size: 24px;
+    color: #000;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 15px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav-menu a.active {
+    color: var(--primary);
+}
+
+/* =========================================================
+   3. SIDEBAR (Starts below header, White Button Style)
+========================================================= */
+
+.sidebar {
+    position: fixed;
+    top: var(--header-height); /* Starts below header */
+    left: 0;
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--header-height));
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 30px 15px;
+    z-index: 999;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 18px;
+    text-decoration: none;
+    color: #666;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 14px; /* Rounded button look */
+    
+    /* THE WHITE BUTTON LOOK */
+    background: var(--white);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); /* Very subtle shadow */
+    transition: var(--transition);
+}
+
+.nav-item:hover {
+    background: #fff0f2; /* Light red tint on hover */
+    color: var(--primary);
+    transform: translateX(5px);
+}
+
+.nav-item.active {
+    background: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 10px 20px rgba(255, 76, 96, 0.2);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #f5f5f5;
+}
+
+/* =========================================================
+   4. MAIN CONTENT AREA
+========================================================= */
+.dashboard-content {
+    margin-left: 260px; 
+    padding: 40px 50px;
+}
+
+.page-title { font-size: 28px; font-weight: 700; }
+
+.user-profile { display: flex; align-items: center; gap: 15px; }
+.user-avatar {
+    width: 40px; height: 40px; background: #eee;
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-weight: 700;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.stat-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+}
+
+.stat-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: block; }
+.stat-value { font-size: 32px; font-weight: 700; }
+.stat-trend { font-size: 14px; font-weight: 500; }
+.stat-trend.positive { color: #00c853; }
+
+/* Timeline & Project Flow (Kept from previous version) */
+.dashboard-flow { display: flex; gap: 50px; }
+.activity-section { flex: 1; }
+.projects-section { flex: 1; }
+
+.timeline { position: relative; padding-left: 30px; border-left: 2px solid #eee; }
+.timeline-item { position: relative; margin-bottom: 40px; }
+.timeline-dot {
+    position: absolute; left: -37px; top: 5px;
+    width: 12px; height: 12px; background: var(--primary);
+    border-radius: 50%; border: 4px solid #fff; box-shadow: 0 0 0 2px #eee;
+}
+.timeline-content .time { font-size: 12px; color: #aaa; }
+.timeline-content .desc { font-size: 15px; color: #444; }
+
+.projects-list { display: flex; flex-direction: column; gap: 25px; }
+.project-row {
+    display: flex; align-items: center; gap: 20px;
+    padding: 15px 0; border-bottom: 1px solid #f0f0f0;
+}
+.project-name { flex: 1; font-weight: 500; }
+.project-progress { flex: 2; height: 6px; background: #eee; border-radius: 10px; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--primary); }
+.project-metric { flex: 0.5; text-align: right; font-weight: 700; }
+
+/* =========================================================
+   5. CRUD TABLE STYLES (List View)
+========================================================= */
+
+.table-container {
+    background: #fff;
+    border-radius: 24px;
+    padding: 10px 0;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+}
+
+.crud-table { width: 100%; border-collapse: collapse; }
+.crud-table th {
+    text-align: left; padding: 20px; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 1px; color: #aaa;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.crud-table td { padding: 20px; font-size: 15px; color: #444; border-bottom: 1px solid #f9f9f9; }
+
+.tag {
+    background: #fff0f2; color: var(--primary);
+    padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 600;
+}
+
+.action-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 10px; transition: all 0.3s ease;
+    text-decoration: none;
+}
+.action-btn.edit { background: #eef2ff; color: #4f46e5; }
+.action-btn.delete { background: #fff5f5; color: #ff4c60; }
+
+/* =========================================================
+   MODERN SPLIT FORM (Compact Vertical Height)
+========================================================= */
+
+/* 1. The Container - Width remains wide, but top/bottom padding is reduced */
+.form-container {
+    background: #ffffff;
+    padding: 60px 60px;          /* REDUCED: From 60px to 30px (Vertical) */
+    border-radius: 32px;
+    border: 1px solid #f0f0f0;
+    max-width: 1300px;           /* UNCHANGED: Kept your wide setting */
+    margin: 40px auto 0 auto;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
+}
+
+/* 2. The Grid Layout */
+.form-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr; 
+    gap: 40px;                   /* REDUCED: From 80px to 40px */
+}
+
+/* 3. Left Column (Visuals) */
+.form-visuals {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;                   /* REDUCED: From 40px to 25px */
+}
+
+.image-preview-container {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #f9f9f9;
+    border-radius: 24px;
+    border: 2px dashed #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.image-preview-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* 4. Right Column (Details) */
+.form-details {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;                   /* REDUCED: From 35px to 20px */
+}
+
+/* 5. Input Field Styling (Tightened) */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;                    /* REDUCED: From 12px to 6px */
+}
+.form-group.checkbox-row {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+}
+
+.form-group input, 
+.form-group textarea, 
+.form-group select {
+    width: 100%;
+    padding: 10px 20px;          /* REDUCED: From 16px to 10px (Vertical) */
+    border: none;
+    border-bottom: 2px solid #eee;
+    background: #fcfcfc;
+    font-size: 15px;             /* SLIGHTLY SMALLER */
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus {
+    border-bottom-color: var(--primary);
+    background: #fff;
+}
+
+/* =========================================================
+   CLEAN FILE UPLOAD STYLES (The Fix)
+========================================================= */
+
+.file-upload-wrapper {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+/* Hide the default Django input so "Currently:" and "Clear" never appear */
+.file-upload-wrapper input[type="file"] {
+    display: none !important;
+}
+
+/* Style the label to look like a premium button */
+.custom-file-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #111;
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.custom-file-btn:hover {
+    background: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 76, 96, 0.3);
+}
+
+/* The text that shows the filename */
+.file-name-display {
+    font-size: 13px;
+    color: var(--primary);
+    font-style: italic;
+}
+
+/* When a user selects a new file, make this text turn Red */
+.file-name-display.has-file {
+    color: var(--primary);
+    font-style: normal;
+    font-weight: 600;
+}
+/* 6. Form Actions (Bottom bar) */
+/* =========================================================
+   UPDATED FORM ACTIONS
+   (Moves buttons to right and reverses order)
+========================================================= */
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;  /* Pushes buttons to the right */
+    flex-direction: row-reverse; 
+    
+    gap: 25px;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #f5f5f5;
+}
+
+/* No changes needed to the button styles themselves, 
+   they will follow the new order automatically */
+.submit-btn {
+    background: #111;
+    color: #fff;
+    padding: 14px 35px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255, 76, 96, 0.2);
+}
+
+.cancel-btn {
+    color: #888;
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.3s;
+}
+
+.cancel-btn:hover {
+    color: #111;
+}
+
+/* 7. Responsive Fixes */
+@media (max-width: 1024px) {
+    .form-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    .form-container {
+        padding: 30px 25px;
+    }
+}

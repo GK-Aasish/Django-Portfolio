@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Projects | Aasish Karki</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <!-- 1. HEADER -->
+    <header class="logo-container">
+        <div class="logo">
+            <span>A</span>
+            <h1>Aasish Karki</h1>
+        </div>
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard:logout' %}">Logout</a>
+        </nav>
+    </header>
+
+    <!-- 2. SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-nav">
+            <a href="{% url 'dashboard:index' %}" class="nav-item"><i data-lucide="layout-dashboard"></i><span>Overview</span></a>
+            <a href="{% url 'dashboard:project_list' %}" class="nav-item active"><i data-lucide="folder-kanban"></i><span>Manage Projects</span></a>
+            <a href="#" class="nav-item"><i data-lucide="message-square"></i><span>Messages</span></a>
+        </div>
+    </aside>
+
+    <!-- 3. MAIN CONTENT -->
+    <main class="dashboard-content">
+        <header class="content-header">
+            <h2 class="page-title">Projects</h2>
+            <!-- CREATE BUTTON -->
+            <a href="{% url 'dashboard:project_create' %}" class="btn-primary">
+                <i data-lucide="plus"></i> Add New Project
+            </a>
+        </header>
+
+        <section class="table-container">
+            <table class="crud-table">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Tech Stack</th>
+                        <th>Status</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Inside your <tbody> loop -->
+                    {% for project in projects %}
+                    <tr>
+                        <td class="font-bold">{{ project.title }}</td>
+                        
+                        <td>
+                            <!-- Call the method we created in models.py -->
+                            {% for tag in project.get_tags_list %}
+                                <span class="tag">{{ tag }}</span>
+                            {% endfor %}
+                        </td>
+                        
+                        <td><span class="status-badge">Active</span></td>
+                        <td class="text-right">
+                            <a href="{% url 'dashboard:project_update' project.id %}" class="action-btn edit"><i data-lucide="edit-3"></i></a>
+                            <a href="{% url 'dashboard:project_delete' project.id %}" class="action-btn delete"><i data-lucide="trash-2"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

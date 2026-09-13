@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Aasish Karki</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <!-- 1. THE HEADER -->
+    <header class="logo-container">
+        <div class="logo">
+            <span>A</span>
+            <h1>Aasish Karki</h1>
+        </div>
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard:logout' %}" class="logout-link">Logout</a>
+        </nav>
+    </header>
+
+    <!-- 2. THE SIDEBAR (Now starts below header) -->
+    <aside class="sidebar">
+        <div class="sidebar-nav">
+            <a href="{% url 'dashboard:index' %}" class="nav-item active"><i data-lucide="layout-dashboard"></i><span>Overview</span></a>
+            <!-- This is your CRUD entry point -->
+            <a href="{% url 'dashboard:project_list' %}" class="nav-item"><i data-lucide="folder-kanban"></i><span>Manage Projects</span></a>
+            <a href="#" class="nav-item"><i data-lucide="message-square"></i><span>Messages</span></a>
+        </div>
+    </aside>
+
+    <!-- 3. THE MAIN CONTENT -->
+    <main class="dashboard-content">
+        <section class="stats-row">
+            <div class="stat-card">
+                <span class="stat-label">Total Views</span>
+                <h3 class="stat-value">12,842</h3>
+                <span class="stat-trend positive">+12%</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">New Visitors</span>
+                <h3 class="stat-value">1,204</h3>
+                <span class="stat-trend positive">+5%</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Avg. Session</span>
+                <h3 class="stat-value">04:12</h3>
+                <span class="stat-trend">Stable</span>
+            </div>
+        </section>
+
+        <div class="dashboard-flow">
+            <section class="activity-section">
+                <h3 class="section-title">Recent Activity</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <p class="time">2 mins ago</p>
+                            <p class="desc">New visitor from <strong>New York, USA</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="projects-section">
+                <h3 class="section-title">Project Performance</h3>
+                <div class="project-list">
+                    <div class="project-row">
+                        <span class="project-name">E-Commerce Site</span>
+                        <div class="project-progress"><div class="progress-bar" style="width: 85%;"></div></div>
+                        <span class="project-metric">85%</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

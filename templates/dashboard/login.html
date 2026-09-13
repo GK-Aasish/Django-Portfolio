@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login Panel</title>
+    <!-- Link your custom dashboard design sheets here -->
+</head>
+<body>
+    <div>
+        <h2>Admin Authentication</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div>
+                <label>Username</label><br>
+                <input type="text" name="username">
+            </div>
+            <div>
+                <label>Password</label><br>
+                <input type="password" name="password">
+            </div>
+            <button type="submit">
+                Login
+            </button>
+        </form>
+    </div>
+</body>
+</html>
