@@ -1,0 +1,7 @@
+port/
+__pychache__/
+*.pyc
+.env
+staticfiles/
+media/
+db.sqlite3
