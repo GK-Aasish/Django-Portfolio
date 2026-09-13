@@ -1,0 +1,814 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    background: #ffffff;
+    overflow-x: hidden; /* Prevents horizontal scroll from the slant */
+}
+/* HEADER */
+.logo-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 25px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.logo span {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    border-radius: 50%;
+}
+.logo h1 {
+    font-size: 24px;
+    color: #000;
+    animation: slideIn 1s forwards;
+}
+/* Logo animation */ 
+@keyframes slideIn { 
+    from { 
+        opacity: 0; 
+        transform: translateX(-60px);
+    } 
+    to { 
+        opacity: 1;
+        transform: 
+        translateX(0); 
+    } 
+}
+.nav-menu {
+    background: #ffffff;
+    padding: 10px 30px;
+    border-radius: 50px;
+    display: flex;
+    gap: 25px;
+}
+.nav-menu a {
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    font-size: 18px;
+    position: relative; 
+    padding: 5px 0;
+    /* CHANGED: Changed 'color' to 'all' so the glow animates smoothly */
+    transition: all 0.3s ease; 
+}
+/* Create the custom underline using a pseudo-element */
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    width: 0; 
+    height: 2px;
+    bottom: 0;
+    left: 50%; 
+    background-color: #ff4c60;
+    transition: all 0.3s ease;
+    transform: translateX(-50%); 
+}
+.nav-menu a:hover {
+    color: #ff4c60;
+    /* ADDED: This makes the text itself glow */
+    text-shadow: 0 0 10px rgba(255, 76, 96, 0.5);
+}
+/* On hover, grow the line to 100% width AND add glow */
+.nav-menu a:hover::after {
+    width: 100%;
+    /* ADDED: This makes the underline look like a neon light */
+    box-shadow: 0 0 8px rgba(255, 76, 96, 0.8);
+}
+/* MAIN LAYOUT */
+main {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    position: relative;
+}
+/* LEFT SIDE (White section) */
+.description {
+    flex: 1;
+    padding-left: 100px;
+    z-index: 2;
+    transform: translateY(-50px); /* Adds a premium, floating feel */
+}
+/* The "Hello, I'm" text */
+.description .greeting {
+    display: block;
+    font-size: 22px;
+    color: #ff4c60;       /* Bright red so the H1 stands out */
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+/* The Typewriter H1 */
+#typewriter {
+    font-size: clamp(40px, 6vw, 65px); /* Responsive: scales perfectly from mobile to TV */
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 15px 0 30px 0;
+    color: #111;         /* Deep black for high contrast */
+    /* CRITICAL FOR ANIMATION STABILITY */
+    display: block;             /* Allows line breaks to work */
+    min-height: 140px;          /* Prevents the paragraph from jumping when text is deleted */
+    white-space: pre-wrap;      /* Essential: Tells browser to respect the \n line breaks */
+}
+/* The Blinking Cursor (Theme Match) */
+.cursor {
+    display: inline-block;
+    width: 3px;
+    height: 55px; 
+    background-color: #ff4c60; /* THE RED ACCENT */
+    margin-left: 8px;
+    vertical-align: middle;
+    animation: blink 0.7s infinite;
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+/* The Paragraph Text */
+.description p {
+    max-width: 480px;   /* Keeps lines at a readable length */
+    font-size: 17px;
+    color: #666;        /* Soft grey for a clean look */
+    line-height: 1.7;   /* High line-height = premium feel */
+}
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    .description {
+        padding-left: 30px;
+        padding-right: 30px;
+        text-align: center;
+        transform: translateY(0);
+    }
+    #typewriter {
+        font-size: 40px;
+        min-height: 120px;
+    }
+    .description p {
+        margin: 0 auto; /* Centers paragraph on mobile */
+    }
+}
+/* RIGHT SIDE (The Image-Shape) */
+.attraction {
+    position: absolute; /* Allows it to sit behind or beside text */
+    right: 0;
+    top: 0;
+    width: 65%; /* Adjust this to make the slant wider or narrower */
+    height: 100%;
+    /* THIS CLIPS THE IMAGE INTO THE DIAGONAL SHAPE */
+    /* Points: Top-Left (at 25%), Top-Right (100%), Bottom-Right (100%), Bottom-Left (0%) */
+    clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+    background: #000; /* Fallback color */
+}
+.attraction img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This ensures the image fills the shape without stretching */
+    display: block;
+    filter:grayscale(100%)
+}
+/* RESPONSIVE FOR MOBILE */
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+    }
+    .description {
+        padding: 120px 20px 20px 20px;
+        text-align: center;
+    }
+    .description h1 {
+        font-size: 36px;
+    }
+    .attraction {
+        position: relative;
+        width: 100%;
+        height: 50%;
+        clip-path: none; /* Removes slant on mobile for better viewing */
+    }
+}
+/* === Projects Page Styles === */
+.projects-page {
+    width: 100%;
+    min-height: 100vh;
+}
+.projects-intro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 42%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 100px 70px 80px 80px;
+    box-sizing: border-box;
+    z-index: 10;
+}
+/* Content inside left side */
+.intro-content {
+    width: 100%;
+    max-width: 500px;
+}
+.section-label {
+    display: block;
+    margin-bottom: 22px;
+    color: #ff4c60;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+.intro-content h1 {
+    margin: 0 0 25px;
+    color: #111;
+    font-size: clamp(55px, 5vw, 80px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -3px;
+}
+/* Red "Works" */
+.intro-content h1 span {
+    display: block;
+    color: #ff4c60;
+}
+.intro-content > p {
+    width: 100%;
+    max-width: 430px;
+    margin: 0;
+    color: #666;
+    font-size: 18px;
+    line-height: 1.7;
+}
+.scroll-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 55px;
+}
+
+.scroll-indicator span {
+    display: block;
+    width: 40px; /* Slightly longer line */
+    height: 1px;
+    background: #ddd; /* The "track" of the line */
+    position: relative;
+    overflow: hidden; /* This clips the moving segment */
+}
+
+/* The moving red segment */
+.scroll-indicator span::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%; /* Start outside the line */
+    width: 40%; /* The length of the moving segment */
+    height: 100%;
+    background: #ff4c60; /* Your signature red */
+    animation: sweep 2s infinite ease-in-out;
+}
+
+/* The "Scroll" text pulse */
+.scroll-indicator p {
+    margin: 0;
+    color: #888;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: textPulse 2s infinite ease-in-out;
+}
+
+/* Keyframes for the moving line */
+@keyframes sweep {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(300%); }
+}
+
+/* Keyframes for the text pulse */
+@keyframes textPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+.projects-showcase {
+    width: 58%;
+    margin-left: 42%;
+    box-sizing: border-box;
+    /*
+       THIS IS THE IMPORTANT PART.
+       The first card begins approximately
+       where it appears in your screenshot.
+       Change 260px if necessary.
+    */
+    padding-top: 120px;
+    padding-left: 40px;
+    padding-right: 70px;
+    padding-bottom: 60px;
+}
+.projects-list {
+    width: 100%;
+}
+.project-card {
+    width: 100%;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 80px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 24px;
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.06);
+    transition:
+        transform 0.4s ease,
+        box-shadow 0.4s ease;
+}
+.project-card:hover {
+    transform: translateY(-10px);
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.12);
+}
+.project-image {
+    width: 100%;
+    height: 360px;
+    overflow: hidden;
+    background: #eeeeee;
+}
+.project-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition:
+        transform 0.7s ease;
+}
+.project-card:hover .project-image img {
+    transform: scale(1.05);
+}
+.project-info {
+    padding: 32px;
+}
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+.project-tags span {
+    display: inline-block;
+    padding: 6px 13px;
+    border-radius: 50px;
+    background: #fff0f2;
+    color: #ff4c60;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+}
+.project-info h2 {
+    margin: 0 0 12px;
+    color: #111;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+.project-info p {
+    max-width: 570px;
+    margin: 0 0 25px;
+    color: #666;
+    font-size: 15px;
+    line-height: 1.7;
+}
+.project-links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+.btn-link {
+    display: inline-block;
+    padding-bottom: 3px;
+    color: #111;
+    border-bottom: 2px solid #ff4c60;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        color 0.3s ease;
+}
+.btn-link:hover {
+    color: #ff4c60;
+}
+.btn-github {
+    color: #888;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+        color 0.3s ease;
+}
+.btn-github:hover {
+    color: #111;
+}
+.nav-menu a.active {
+    color: #ff4c60;
+}
+@media (min-width: 1400px) {
+    .projects-intro {
+        padding-left: 80px;
+        padding-right: 80px;
+    }
+    .projects-showcase {
+        padding-left: 50px;
+        padding-right: 90px;
+    }
+    .project-card {
+        max-width: 700px;
+    }
+}
+@media (max-width: 1000px) {
+    .projects-intro {
+        width: 40%;
+        padding-left: 45px;
+        padding-right: 35px;
+    }
+    .projects-showcase {
+        width: 60%;
+        margin-left: 40%;
+        padding-top: 230px;
+        padding-left: 30px;
+        padding-right: 35px;
+    }
+    .intro-content h1 {
+        font-size: 55px;
+    }
+    .intro-content > p {
+        font-size: 16px;
+    }
+    .project-image {
+        height: 300px;
+    }
+}
+@media (max-width: 768px) {
+    /*
+       LEFT SIDE IS NO LONGER FIXED
+       ON MOBILE
+    */
+    .projects-intro {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        height: auto;
+        min-height: 75vh;
+        padding:
+            120px
+            30px
+            70px;
+    }
+    .intro-content h1 {
+        font-size: 52px;
+        letter-spacing: -2px;
+    }
+    .intro-content > p {
+        font-size: 17px;
+    }
+    /* PROJECTS */
+    .projects-showcase {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 0;
+        padding-left: 25px;
+        padding-right: 25px;
+        padding-bottom: 100px;
+    }
+    .project-card {
+        max-width: 100%;
+        margin-bottom: 100px;
+        border-radius: 20px;
+    }
+    .project-image {
+        height: 280px;
+    }
+    .project-info {
+        padding: 27px;
+    }
+    .project-info h2 {
+        font-size: 27px;
+    }
+}
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+    .projects-intro {
+        min-height: 70vh;
+        padding:
+            110px
+            22px
+            60px;
+    }
+    .intro-content h1 {
+        font-size: 43px;
+        letter-spacing: -1px;
+    }
+    .intro-content > p {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+    .projects-showcase {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .project-card {
+        margin-bottom: 80px;
+        border-radius: 18px;
+    }
+    .project-image {
+        height: 220px;
+    }
+    .project-info {
+        padding: 22px;
+    }
+    .project-tags span {
+        font-size: 10px;
+        padding: 6px 11px;
+    }
+    .project-info h2 {
+        font-size: 24px;
+    }
+    .project-info p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    .project-links {
+        gap: 20px;
+    }
+    .btn-link,
+    .btn-github {
+        font-size: 13px;
+    }
+}
+/* === About Page Styles === */
+.about-main {
+    padding-top: 150px;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 100px;
+    min-height: 100vh;
+}
+/* THE BENTO GRID SYSTEM */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    grid-template-rows: auto;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+/* Individual Tiles */
+.bento-item {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 30px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    transition: transform 0.3s ease;
+}
+.bento-item:hover {
+    transform: translateY(-5px);
+}
+/* Tile Sizes & Spans */
+.bio-card {
+    grid-column: span 2;
+    grid-row: span 2; /* Makes it a large vertical rectangle */
+}
+.skill-card {
+    grid-column: span 2;
+}
+.design-card {
+    grid-column: span 1;
+}
+.status-card {
+    grid-column: span 1;
+}
+.goal-card {
+    grid-column: span 2;
+}
+/* Typography inside Bento */
+.section-label {
+    display: block;
+    color: #ff4c60;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+.bio-card h2 {
+    font-size: 42px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+}
+.bio-card h2 span { color: #ff4c60; }
+.bio-card p {
+    color: #666;
+    font-size: 18px;
+    line-height: 1.6;
+}
+.skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.skill-list span {
+    background: #fff0f2;
+    color: #ff4c60;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+}
+.design-card h3 { font-size: 24px; margin-bottom: 5px; }
+.design-card p { color: #888; font-size: 14px; }
+.status-card p { font-size: 18px; color: #111; }
+.status-card strong { color: #ff4c60; }
+.goal-card p { font-size: 16px; color: #555; line-height: 1.5; }
+/* RESPONSIVE: Mobile/Tablet View */
+@media (max-width: 1024px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
+    }
+}
+@media (max-width: 600px) {
+    .bento-grid {
+        grid-template-columns: 1fr; /* 1 column on mobile */
+    }
+    .bio-card, .skill-card, .design-card, .status-card, .goal-card {
+        grid-column: span 1;
+    }
+    .about-main { padding-top: 120px; }
+}
+/* === Contact Page Styles === */
+.contact-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 1300px; /* Prevents the layout from stretching too wide on TVs */
+    margin: 0 auto;
+    padding-top: 180px; /* Space for fixed header */
+    padding-bottom: 100px;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+/* LEFT SIDE: Information */
+.contact-side-info {
+    flex: 1; /* Takes up roughly half the space */
+    padding-right: 50px;
+}
+.contact-side-info h1 {
+    font-size: clamp(40px, 6vw, 65px);
+    line-height: 1.1;
+    margin-bottom: 50px;
+    color: #111;
+}
+.contact-side-info h1 span {
+    color: #ff4c60;
+}
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.info-item label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #aaa;
+    margin-bottom: 8px;
+}
+.info-item a, .info-item p {
+    font-size: 22px;
+    font-weight: 500;
+    color: #111;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.info-item a:hover {
+    color: #ff4c60;
+}
+.social-links {
+    display: flex;
+    gap: 20px;
+}
+.social-links a {
+    font-size: 16px !important; /* Overriding the big link size */
+    color: #666 !important;
+}
+.social-links a:hover {
+    color: #111 !important;
+}
+/* RIGHT SIDE: Form */
+.contact-side-form {
+    flex: 1.2; /* Makes the form slightly wider than the info for visual balance */
+}
+.minimal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.input-row {
+    display: flex;
+    gap: 20px;
+}
+.input-group {
+    flex: 1;
+}
+/* The Underlined Input Style (Premium Look) */
+.minimal-form input, 
+.minimal-form textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #ddd; /* Clean line instead of a box */
+    padding: 15px 0;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: all 0.3s ease;
+}
+.minimal-form input:focus, 
+.minimal-form textarea:focus {
+    border-bottom: 2px solid #ff4c60; /* Highlight on focus */
+}
+.submit-btn {
+    align-self: flex-start;
+    margin-top: 20px;
+    padding: 15px 40px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+.submit-btn:hover {
+    background: #ff4c60;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255, 76, 96, 0.3);
+}
+.submit-btn span {
+    transition: transform 0.3s ease;
+}
+.submit-btn:hover span {
+    transform: translateX(5px);
+}
+/* RESPONSIVE (MOBILE) */
+@media (max-width: 1024px) {
+    .contact-wrapper {
+        flex-direction: column; /* Stack vertically on tablets/mobile */
+        padding-top: 140px;
+    }
+    .contact-side-info {
+        padding-right: 0;
+        margin-bottom: 60px;
+        text-align: center;
+    }
+    .info-list {
+        align-items: center;
+    }
+    .social-links {
+        justify-content: center;
+    }
+    .input-row {
+        flex-direction: column;
+        gap: 30px;
+    }
+}
+@media (max-width: 480px) {
+    .contact-hero h1 {
+        font-size: 40px;
+    }
+    .submit-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
