@@ -1,0 +1,732 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Messages | Aasish Karki</title>
+
+
+    <!-- Admin CSS -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/admin.css' %}"
+    >
+
+
+    <!-- Google Font -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- Lucide Icons -->
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="logo-container">
+
+
+        <!-- LOGO -->
+
+        <div class="logo">
+
+            <span>A</span>
+
+            <h1>Aasish Karki</h1>
+
+        </div>
+
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="nav-menu">
+
+
+            <!-- OVERVIEW -->
+
+            <a
+                href="{% url 'dashboard:index' %}"
+                class="nav-link"
+            >
+
+                <i data-lucide="layout-dashboard"></i>
+
+                <span>
+                    Overview
+                </span>
+
+            </a>
+
+
+
+            <!-- PROJECTS -->
+
+            <a
+                href="{% url 'dashboard:project_list' %}"
+                class="nav-link"
+            >
+
+                <i data-lucide="folder-kanban"></i>
+
+                <span>
+                    Projects
+                </span>
+
+            </a>
+
+
+
+            <!-- MESSAGES -->
+
+            <a
+                href="{% url 'dashboard:messages' %}"
+                class="nav-link active"
+            >
+
+                <i data-lucide="message-square"></i>
+
+                <span>
+                    Messages
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+
+        <!-- HEADER RIGHT -->
+
+        <nav class="header-right">
+
+            <a
+                href="{% url 'dashboard:logout' %}"
+                class="logout-btn"
+            >
+                Logout
+            </a>
+
+        </nav>
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="dashboard-content">
+
+
+        <section class="messages-container">
+
+
+            <!-- =================================================
+                 LEFT SIDE — MESSAGE LIST
+            ================================================== -->
+
+            <aside class="messages-list">
+
+
+                <!-- INBOX HEADER -->
+
+                <div class="messages-list-header">
+
+                    <h3>
+                        Inbox
+                    </h3>
+
+
+                    <span class="message-count">
+                        {{ messages|length }}
+                    </span>
+
+                </div>
+
+
+
+                <!-- MESSAGE ITEMS -->
+
+                <div class="message-items">
+
+
+                    {% for item in messages %}
+
+
+                    <a
+                        href="?message={{ item.id }}"
+                        class="
+                            message-item
+                            {% if not item.is_read %}unread{% endif %}
+                            {% if selected_message and selected_message.id == item.id %}selected{% endif %}
+                        "
+                    >
+
+
+                        <!-- AVATAR -->
+
+                        <div class="message-avatar">
+
+                            {{ item.name|first|upper }}
+
+                        </div>
+
+
+
+                        <!-- MESSAGE PREVIEW -->
+
+                        <div class="message-preview">
+
+
+                            <!-- NAME + DATE -->
+
+                            <div class="message-top">
+
+                                <strong>
+                                    {{ item.name }}
+                                </strong>
+
+
+                                <span class="message-date">
+
+                                    {{ item.created_at|date:"M d" }}
+
+                                </span>
+
+                            </div>
+
+
+
+                            <!-- SUBJECT -->
+
+                            <div class="message-subject">
+
+                                {{ item.subject|default:"No Subject" }}
+
+                            </div>
+
+
+                        </div>
+
+
+                    </a>
+
+
+                    {% empty %}
+
+
+                    <!-- EMPTY INBOX -->
+
+                    <div class="empty-inbox">
+
+                        <i data-lucide="inbox"></i>
+
+
+                        <h3>
+                            No messages yet
+                        </h3>
+
+
+                        <p>
+                            Messages from your portfolio
+                            contact form will appear here.
+                        </p>
+
+                    </div>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            </aside>
+
+
+
+            <!-- =================================================
+                 RIGHT SIDE — MESSAGE DETAILS
+            ================================================== -->
+
+            <section class="message-details">
+
+
+                {% if selected_message %}
+
+
+                <!-- =================================================
+                     MESSAGE HEADER
+                ================================================== -->
+
+                <div class="message-details-header">
+
+
+                    <div>
+
+
+                        <!-- SUBJECT -->
+
+                        <h2>
+
+                            {{ selected_message.subject|default:"No Subject" }}
+
+                        </h2>
+
+
+
+                        <!-- SENDER -->
+
+                        <div class="sender-info">
+
+
+                            <!-- AVATAR -->
+
+                            <div class="large-avatar">
+
+                                {{ selected_message.name|first|upper }}
+
+                            </div>
+
+
+
+                            <!-- SENDER DETAILS -->
+
+                            <div>
+
+                                <strong>
+
+                                    {{ selected_message.name }}
+
+                                </strong>
+
+
+                                <a
+                                    href="mailto:{{ selected_message.email }}"
+                                >
+
+                                    {{ selected_message.email }}
+
+                                </a>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- DATE -->
+
+                    <div class="message-time">
+
+                        {{ selected_message.created_at|date:"M d, Y" }}
+
+                        <br>
+
+                        {{ selected_message.created_at|date:"h:i A" }}
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     MESSAGE BODY
+                ================================================== -->
+
+                <div class="message-body">
+
+                    <p>
+
+                        {{ selected_message.message|linebreaksbr }}
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     MESSAGE ACTIONS
+                ================================================== -->
+
+                <div class="message-actions">
+
+
+                    <!-- REPLY BUTTON -->
+
+                    <a
+                        href="mailto:{{ selected_message.email }}"
+                        class="btn-primary"
+                    >
+
+                        <i data-lucide="reply"></i>
+
+                        <span>
+                            Reply
+                        </span>
+
+                    </a>
+
+
+
+                    <!-- DELETE BUTTON -->
+
+                    <button
+                        type="button"
+                        class="delete-message-btn"
+                        onclick="openDeleteModal()"
+                    >
+
+                        <i data-lucide="trash-2"></i>
+
+                        <span>
+                            Delete
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+
+                {% else %}
+
+
+                <!-- =================================================
+                     NO MESSAGE SELECTED
+                ================================================== -->
+
+                <div class="no-message-selected">
+
+
+                    <div class="no-message-icon">
+
+                        <i data-lucide="mail-open"></i>
+
+                    </div>
+
+
+                    <h2>
+
+                        Select a message
+
+                    </h2>
+
+
+                    <p>
+
+                        Choose a message from the inbox
+                        to view its details.
+
+                    </p>
+
+
+                </div>
+
+
+                {% endif %}
+
+
+            </section>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         DELETE CONFIRMATION MODAL
+    ====================================================== -->
+
+    {% if selected_message %}
+
+
+    <div
+        class="delete-modal-overlay"
+        id="deleteModal"
+    >
+
+
+        <div
+            class="delete-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="deleteModalTitle"
+        >
+
+
+            <!-- =================================================
+                 DELETE ICON
+            ================================================== -->
+
+            <div class="delete-modal-icon">
+
+                <i data-lucide="trash-2"></i>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MODAL CONTENT
+            ================================================== -->
+
+            <div class="delete-modal-content">
+
+
+                <h3 id="deleteModalTitle">
+
+                    Delete message?
+
+                </h3>
+
+
+                <p>
+
+                    Are you sure you want to delete this message?
+
+                    <br>
+
+                    This action cannot be undone.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MODAL ACTIONS
+            ================================================== -->
+
+            <div class="delete-modal-actions">
+
+
+                <!-- CANCEL -->
+
+                <button
+                    type="button"
+                    class="cancel-delete-btn"
+                    onclick="closeDeleteModal()"
+                >
+
+                    Cancel
+
+                </button>
+
+
+
+                <!-- CONFIRM DELETE -->
+
+                <form
+                    method="POST"
+                    action="{% url 'dashboard:message_delete' selected_message.id %}"
+                >
+
+
+                    {% csrf_token %}
+
+
+                    <button
+                        type="submit"
+                        class="confirm-delete-btn"
+                    >
+
+                        <i data-lucide="trash-2"></i>
+
+                        <span>
+                            Delete Message
+                        </span>
+
+                    </button>
+
+
+                </form>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+
+        /* =====================================================
+           INITIALIZE LUCIDE
+        ====================================================== */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                lucide.createIcons();
+
+            }
+        );
+
+
+
+        /* =====================================================
+           OPEN DELETE MODAL
+        ====================================================== */
+
+        function openDeleteModal() {
+
+
+            const modal =
+                document.getElementById("deleteModal");
+
+
+            if (!modal) {
+
+                return;
+
+            }
+
+
+            modal.classList.add("active");
+
+
+            document.body.style.overflow = "hidden";
+
+
+        }
+
+
+
+        /* =====================================================
+           CLOSE DELETE MODAL
+        ====================================================== */
+
+        function closeDeleteModal() {
+
+
+            const modal =
+                document.getElementById("deleteModal");
+
+
+            if (!modal) {
+
+                return;
+
+            }
+
+
+            modal.classList.remove("active");
+
+
+            document.body.style.overflow = "";
+
+
+        }
+
+
+
+        /* =====================================================
+           CLOSE WHEN CLICKING OUTSIDE
+        ====================================================== */
+
+        document.addEventListener(
+            "click",
+            function (event) {
+
+
+                const modal =
+                    document.getElementById("deleteModal");
+
+
+                if (!modal) {
+
+                    return;
+
+                }
+
+
+                if (event.target === modal) {
+
+                    closeDeleteModal();
+
+                }
+
+
+            }
+        );
+
+
+
+        /* =====================================================
+           CLOSE WITH ESCAPE
+        ====================================================== */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+
+                if (event.key === "Escape") {
+
+                    closeDeleteModal();
+
+                }
+
+
+            }
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>

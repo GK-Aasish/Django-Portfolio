@@ -11,28 +11,32 @@
 </head>
 <body>
 
-    <!-- 1. THE HEADER -->
+    <!-- 1. THE HEADER (Now contains everything) -->
     <header class="logo-container">
         <div class="logo">
             <span>A</span>
             <h1>Aasish Karki</h1>
         </div>
+
+        <!-- NEW: Navigation links moved from sidebar to here -->
         <nav class="nav-menu">
-            <a href="{% url 'dashboard:logout' %}" class="logout-link">Logout</a>
+            <a href="{% url 'dashboard:index' %}" class="nav-link active">
+                <i data-lucide="layout-dashboard"></i><span>Overview</span>
+            </a>
+            <a href="{% url 'dashboard:project_list' %}" class="nav-link">
+                <i data-lucide="folder-kanban"></i><span>Projects</span>
+            </a>
+            <a href="{% url "dashboard:messages" %}" class="nav-link">
+                <i data-lucide="message-square"></i><span>Messages</span>
+            </a>
+        </nav>
+
+        <nav class="header-right">
+            <a href="{% url 'dashboard:logout' %}" class="logout-btn">Logout</a>
         </nav>
     </header>
 
-    <!-- 2. THE SIDEBAR (Now starts below header) -->
-    <aside class="sidebar">
-        <div class="sidebar-nav">
-            <a href="{% url 'dashboard:index' %}" class="nav-item active"><i data-lucide="layout-dashboard"></i><span>Overview</span></a>
-            <!-- This is your CRUD entry point -->
-            <a href="{% url 'dashboard:project_list' %}" class="nav-item"><i data-lucide="folder-kanban"></i><span>Manage Projects</span></a>
-            <a href="#" class="nav-item"><i data-lucide="message-square"></i><span>Messages</span></a>
-        </div>
-    </aside>
-
-    <!-- 3. THE MAIN CONTENT -->
+    <!-- 2. THE MAIN CONTENT (No more sidebar margin) -->
     <main class="dashboard-content">
         <section class="stats-row">
             <div class="stat-card">

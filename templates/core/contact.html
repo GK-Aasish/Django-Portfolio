@@ -52,31 +52,101 @@
 
         <!-- RIGHT SIDE: Form -->
         <section class="contact-side-form">
-            <form class="minimal-form">
-                <div class="form-row">
-                    <div class="input-group">
-                        <input type="text" placeholder="Your Name" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="email" placeholder="Your Email" required>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <input type="text" placeholder="Subject">
-                </div>
+            <form method="POST" action="{% url 'contact' %}" class="minimal-form" id="contactForm">
 
-                <div class="input-group">
-                    <textarea placeholder="How can I help you?" rows="4"></textarea>
-                </div>
+    {% csrf_token %}
+    <input type="hidden" name="submission_token" id="submissionToken">
 
-                <button type="submit" class="submit-btn">
-                    Send Message <span>→</span>
-                </button>
-            </form>
+
+    <div class="form-row">
+
+        <div class="input-group">
+            <input
+                type="text"
+                name="name"
+                placeholder="Your Name"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <input
+                type="email"
+                name="email"
+                placeholder="Your Email"
+                required
+            >
+        </div>
+
+    </div>
+
+    <div class="input-group">
+        <input
+            type="text"
+            name="subject"
+            placeholder="Subject"
+        >
+    </div>
+
+    <div class="input-group">
+        <textarea
+            name="message"
+            placeholder="How can I help you?"
+            rows="4"
+            required
+        ></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn" id="contactSubmitBtn">
+    <span id="contactButtonText">Send Message</span>
+    <span>→</span>
+</button>
+
+
+</form>
         </section>
 
     </main>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("contactForm");
+    const button = document.getElementById("contactSubmitBtn");
+    const buttonText = document.getElementById("contactButtonText");
+    const tokenInput = document.getElementById("submissionToken");
+
+    if (!form || !button || !tokenInput) {
+        return;
+    }
+
+    // Generate a unique token for this form submission
+    tokenInput.value = crypto.randomUUID();
+
+    let submitted = false;
+
+    form.addEventListener("submit", function (event) {
+
+        // Prevent duplicate submission
+        if (submitted) {
+            event.preventDefault();
+            return;
+        }
+
+        submitted = true;
+
+        // Disable button
+        button.disabled = true;
+        button.style.pointerEvents = "none";
+
+        // Change button text
+        if (buttonText) {
+            buttonText.textContent = "Sending...";
+        }
+
+    });
+
+});
+</script>
 
 </body>
 </html>

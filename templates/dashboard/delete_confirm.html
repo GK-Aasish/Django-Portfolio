@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Project</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+</head>
+<body>
+    <div class="delete-confirmation">
+        <h2 id="title">Are you sure you want to delete the project "{{ project.title }}"?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-primary">Yes, Delete</button>
+            <a class="cancel-btn" href="{% url 'dashboard:project_list' %}">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
