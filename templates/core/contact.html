@@ -24,23 +24,24 @@
     </header>
 
     <main class="contact-wrapper">
-        
-        <!-- LEFT SIDE: Info -->
+
         <section class="contact-side-info">
             <span class="section-label">Get in Touch</span>
             <h1>Let's start a <br><span>conversation.</span></h1>
-            
+
             <div class="info-list">
                 <div class="info-item">
                     <label>Email</label>
+                    <!-- TODO: put your real email here -->
                     <a href="mailto:aasish@example.com">aasish@example.com</a>
                 </div>
                 <div class="info-item">
                     <label>Socials</label>
                     <div class="social-links">
-                        <a href="#">LinkedIn</a>
-                        <a href="#">GitHub</a>
-                        <a href="#">Instagram</a>
+                        <!-- TODO: put your real profile links here -->
+                        <a href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
                     </div>
                 </div>
                 <div class="info-item">
@@ -50,101 +51,63 @@
             </div>
         </section>
 
-        <!-- RIGHT SIDE: Form -->
         <section class="contact-side-form">
             <form method="POST" action="{% url 'contact' %}" class="minimal-form" id="contactForm">
+                {% csrf_token %}
+                <input type="hidden" name="submission_token" id="submissionToken">
 
-    {% csrf_token %}
-    <input type="hidden" name="submission_token" id="submissionToken">
+                {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
 
+                <div class="form-row">
+                    <div class="input-group">
+                        <input type="text" name="name" placeholder="Your Name" maxlength="100" value="{{ form_data.name }}" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" name="email" placeholder="Your Email" value="{{ form_data.email }}" required>
+                    </div>
+                </div>
 
-    <div class="form-row">
+                <div class="input-group">
+                    <input type="text" name="subject" placeholder="Subject" maxlength="200" value="{{ form_data.subject }}">
+                </div>
 
-        <div class="input-group">
-            <input
-                type="text"
-                name="name"
-                placeholder="Your Name"
-                required
-            >
-        </div>
+                <div class="input-group">
+                    <textarea name="message" placeholder="How can I help you?" rows="4" required>{{ form_data.message }}</textarea>
+                </div>
 
-        <div class="input-group">
-            <input
-                type="email"
-                name="email"
-                placeholder="Your Email"
-                required
-            >
-        </div>
-
-    </div>
-
-    <div class="input-group">
-        <input
-            type="text"
-            name="subject"
-            placeholder="Subject"
-        >
-    </div>
-
-    <div class="input-group">
-        <textarea
-            name="message"
-            placeholder="How can I help you?"
-            rows="4"
-            required
-        ></textarea>
-    </div>
-
-    <button type="submit" class="submit-btn" id="contactSubmitBtn">
-    <span id="contactButtonText">Send Message</span>
-    <span>→</span>
-</button>
-
-
-</form>
+                <button type="submit" class="submit-btn" id="contactSubmitBtn">
+                    <span id="contactButtonText">Send Message</span>
+                    <span>→</span>
+                </button>
+            </form>
         </section>
 
     </main>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-
     const form = document.getElementById("contactForm");
     const button = document.getElementById("contactSubmitBtn");
     const buttonText = document.getElementById("contactButtonText");
     const tokenInput = document.getElementById("submissionToken");
 
-    if (!form || !button || !tokenInput) {
-        return;
-    }
+    if (!form || !button || !tokenInput) return;
 
-    // Generate a unique token for this form submission
+    // One unique token per page load
     tokenInput.value = crypto.randomUUID();
 
     let submitted = false;
 
     form.addEventListener("submit", function (event) {
-
-        // Prevent duplicate submission
         if (submitted) {
             event.preventDefault();
             return;
         }
-
         submitted = true;
-
-        // Disable button
         button.disabled = true;
         button.style.pointerEvents = "none";
-
-        // Change button text
-        if (buttonText) {
-            buttonText.textContent = "Sending...";
-        }
-
+        if (buttonText) buttonText.textContent = "Sending...";
     });
-
 });
 </script>
 

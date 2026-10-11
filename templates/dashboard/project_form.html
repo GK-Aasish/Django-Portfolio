@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Project</title>
+    <title>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Project | Aasish Karki</title>
     <link rel="stylesheet" href="{% static 'css/admin.css' %}">
-    <link rel="stylesheet" href="{% static 'css/admin_crud.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -18,102 +17,104 @@
             <h1>Aasish Karki</h1>
         </div>
         <nav class="nav-menu">
-            <a href="{% url 'dashboard:project_list' %}">Back to List</a>
+            <a href="{% url 'dashboard:index' %}" class="nav-link"><i data-lucide="layout-dashboard"></i><span>Overview</span></a>
+            <a href="{% url 'dashboard:project_list' %}" class="nav-link active"><i data-lucide="folder-kanban"></i><span>Projects</span></a>
+            <a href="{% url 'dashboard:messages' %}" class="nav-link"><i data-lucide="message-square"></i><span>Messages</span></a>
+        </nav>
+        <nav class="header-right">
+            <a href="{% url 'dashboard:logout' %}" class="logout-btn">Logout</a>
         </nav>
     </header>
 
-    <aside class="sidebar">
-        <div class="sidebar-nav">
-            <a href="{% url 'dashboard:index' %}" class="nav-item"><i data-lucide="layout-dashboard"></i><span>Overview</span></a>
-            <a href="{% url 'dashboard:project_list' %}" class="nav-item active"><i data-lucide="folder-kanban"></i><span>Manage Projects</span></a>
-            <a href="#" class="nav-item"><i data-lucide="message-square"></i><span>Messages</span></a>
-        </div>
-    </aside>
-
     <main class="dashboard-content">
         <section class="form-container">
+
+            {% if form.errors %}
+            <div class="alert error">Please fix the errors below.</div>
+            {% endif %}
+
             <form method="POST" enctype="multipart/form-data" class="crud-form">
                 {% csrf_token %}
-                
+
                 <div class="form-layout">
-                    
-                    <!-- LEFT COLUMN: Visuals & Highlight -->
+
+                    <!-- LEFT: visuals -->
                     <div class="form-visuals">
                         <div class="image-upload-card">
                             <div class="image-preview-container" id="preview-container">
+                                {% if form.instance.image %}
+                                <img id="image-preview" src="{{ form.instance.image.url }}" alt="Preview">
+                                <div class="placeholder-icon" style="display:none;">
+                                {% else %}
                                 <img id="image-preview" src="#" alt="Preview" style="display: none;">
                                 <div class="placeholder-icon">
+                                {% endif %}
                                     <i data-lucide="image"></i>
                                     <p>No image selected</p>
                                 </div>
                             </div>
+
                             <div class="file-upload-wrapper">
-                                <!-- 1. The Custom Button (This replaces the default 'Browse' button) -->
                                 <label for="id_image" class="custom-file-btn">
                                     <i data-lucide="upload-cloud"></i>
                                     <span>{% if form.instance.pk %}Change Image{% else %}Choose Image{% endif %}</span>
                                 </label>
-
-                                <!-- 2. The REAL Input (We hide it completely so Django's text doesn't show) -->
-                                <input type="file" name="image" id="id_image" accept="image/*" style="display: none;">
-
-                                <!-- 3. The Filename Display (Shows the name of the new file you picked) -->
+                                <input type="file" name="image" id="id_image" accept="image/*">
                                 <span class="file-name-display">
-                                    {% if form.instance.image %}
-                                        {{ form.instance.image.name|cut:"portfolio_projects/" }}
-                                    {% else %}
-                                        No file selected
-                                    {% endif %}
+                                    {% if form.instance.image %}{{ form.instance.image.name|cut:"portfolio_projects/" }}{% else %}No file selected{% endif %}
                                 </span>
+                                {% if form.image.errors %}<p class="error-text">{{ form.image.errors.0 }}</p>{% endif %}
                             </div>
                         </div>
 
-                        <!-- MOVED: Highlight Checkbox is now here -->
                         <div class="highlight-section">
                             <div class="form-group checkbox-row">
-                                <label for="{{ form.is_featured.id_for_label }}">Highlight</label>
+                                <label for="{{ form.is_featured.id_for_label }}">Show on public Projects page</label>
                                 {{ form.is_featured }}
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ form.title.id_for_label }}">Project Title</label>                            
+                            <label for="{{ form.title.id_for_label }}">Project Title</label>
                             {{ form.title }}
                             {% if form.title.errors %}<p class="error-text">{{ form.title.errors.0 }}</p>{% endif %}
                         </div>
                     </div>
 
-                    <!-- RIGHT COLUMN: Details -->
+                    <!-- RIGHT: details -->
                     <div class="form-details">
                         <div class="form-group">
                             <label for="{{ form.live_preview_url.id_for_label }}">Live Preview Link</label>
                             {{ form.live_preview_url }}
+                            {% if form.live_preview_url.errors %}<p class="error-text">{{ form.live_preview_url.errors.0 }}</p>{% endif %}
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="{{ form.source_code_url.id_for_label }}">GitHub Link</label>
                             {{ form.source_code_url }}
+                            {% if form.source_code_url.errors %}<p class="error-text">{{ form.source_code_url.errors.0 }}</p>{% endif %}
                         </div>
 
                         <div class="form-group">
                             <label for="{{ form.technologies.id_for_label }}">Technologies</label>
                             {{ form.technologies }}
+                            {% if form.technologies.errors %}<p class="error-text">{{ form.technologies.errors.0 }}</p>{% endif %}
                         </div>
 
                         <div class="form-group">
                             <label for="{{ form.description.id_for_label }}">Description</label>
                             {{ form.description }}
+                            {% if form.description.errors %}<p class="error-text">{{ form.description.errors.0 }}</p>{% endif %}
                         </div>
 
                         <div class="form-group">
                             <label for="{{ form.date_completed.id_for_label }}">Completion Date</label>
                             {{ form.date_completed }}
+                            {% if form.date_completed.errors %}<p class="error-text">{{ form.date_completed.errors.0 }}</p>{% endif %}
                         </div>
                     </div>
-
                 </div>
 
-                <!-- ACTION BUTTONS (Now pushed to the right) -->
                 <div class="form-actions">
                     <button type="submit" class="submit-btn">Save Project</button>
                     <a href="{% url 'dashboard:project_list' %}" class="cancel-btn">Cancel</a>
@@ -123,35 +124,27 @@
     </main>
 
     <script>
-        // Initialize Lucide Icons
         lucide.createIcons();
 
-        // File Upload Logic: Update the name display when a file is picked
-        const fileInput = document.querySelector('input[type="file"]');
+        const fileInput = document.getElementById('id_image');
         const fileNameDisplay = document.querySelector('.file-name-display');
         const imagePreview = document.getElementById('image-preview');
         const placeholder = document.querySelector('.placeholder-icon');
 
         if (fileInput) {
-            fileInput.addEventListener('change', function() {
+            fileInput.addEventListener('change', function () {
                 if (this.files && this.files[0]) {
-                    // 1. Update the text name
-                    const fileName = this.files[0].name;
-                    fileNameDisplay.textContent = fileName;
+                    fileNameDisplay.textContent = this.files[0].name;
                     fileNameDisplay.classList.add('has-file');
 
-                    // 2. Update the visual preview
                     const reader = new FileReader();
-                    reader.onload = function(e) {
-                        if (imagePreview) {
-                            imagePreview.src = e.target.result;
-                            imagePreview.style.display = 'block';
-                            if (placeholder) placeholder.style.display = 'none';
-                        }
-                    }
+                    reader.onload = function (e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                        if (placeholder) placeholder.style.display = 'none';
+                    };
                     reader.readAsDataURL(this.files[0]);
                 } else {
-                    // Reset if user cancels
                     fileNameDisplay.textContent = "No file selected";
                     fileNameDisplay.classList.remove('has-file');
                 }

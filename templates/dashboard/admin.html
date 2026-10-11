@@ -11,80 +11,85 @@
 </head>
 <body>
 
-    <!-- 1. THE HEADER (Now contains everything) -->
     <header class="logo-container">
         <div class="logo">
             <span>A</span>
             <h1>Aasish Karki</h1>
         </div>
-
-        <!-- NEW: Navigation links moved from sidebar to here -->
         <nav class="nav-menu">
-            <a href="{% url 'dashboard:index' %}" class="nav-link active">
-                <i data-lucide="layout-dashboard"></i><span>Overview</span>
-            </a>
-            <a href="{% url 'dashboard:project_list' %}" class="nav-link">
-                <i data-lucide="folder-kanban"></i><span>Projects</span>
-            </a>
-            <a href="{% url "dashboard:messages" %}" class="nav-link">
-                <i data-lucide="message-square"></i><span>Messages</span>
-            </a>
+            <a href="{% url 'dashboard:index' %}" class="nav-link active"><i data-lucide="layout-dashboard"></i><span>Overview</span></a>
+            <a href="{% url 'dashboard:project_list' %}" class="nav-link"><i data-lucide="folder-kanban"></i><span>Projects</span></a>
+            <a href="{% url 'dashboard:messages' %}" class="nav-link"><i data-lucide="message-square"></i><span>Messages</span></a>
         </nav>
-
         <nav class="header-right">
             <a href="{% url 'dashboard:logout' %}" class="logout-btn">Logout</a>
         </nav>
     </header>
 
-    <!-- 2. THE MAIN CONTENT (No more sidebar margin) -->
     <main class="dashboard-content">
+
         <section class="stats-row">
             <div class="stat-card">
-                <span class="stat-label">Total Views</span>
-                <h3 class="stat-value">12,842</h3>
-                <span class="stat-trend positive">+12%</span>
+                <span class="stat-label">Total Projects</span>
+                <h3 class="stat-value">{{ project_count }}</h3>
+                <span class="stat-trend">{{ featured_count }} featured</span>
             </div>
             <div class="stat-card">
-                <span class="stat-label">New Visitors</span>
-                <h3 class="stat-value">1,204</h3>
-                <span class="stat-trend positive">+5%</span>
+                <span class="stat-label">Messages</span>
+                <h3 class="stat-value">{{ message_count }}</h3>
+                <span class="stat-trend">All time</span>
             </div>
             <div class="stat-card">
-                <span class="stat-label">Avg. Session</span>
-                <h3 class="stat-value">04:12</h3>
-                <span class="stat-trend">Stable</span>
+                <span class="stat-label">Unread</span>
+                <h3 class="stat-value">{{ unread_count }}</h3>
+                <span class="stat-trend {% if unread_count %}positive{% endif %}">
+                    {% if unread_count %}Needs reply{% else %}All caught up{% endif %}
+                </span>
             </div>
         </section>
 
         <div class="dashboard-flow">
             <section class="activity-section">
-                <h3 class="section-title">Recent Activity</h3>
+                <h3 class="section-title">Recent Messages</h3>
                 <div class="timeline">
+                    {% for m in recent_messages %}
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
-                            <p class="time">2 mins ago</p>
-                            <p class="desc">New visitor from <strong>New York, USA</strong></p>
+                            <p class="time">{{ m.created_at|timesince }} ago</p>
+                            <p class="desc">
+                                <a href="{% url 'dashboard:messages' %}?message={{ m.id }}">
+                                    {% if not m.is_read %}<strong>{{ m.name }}</strong>{% else %}{{ m.name }}{% endif %}
+                                </a>
+                                &mdash; {{ m.subject|default:"No Subject" }}
+                            </p>
                         </div>
                     </div>
+                    {% empty %}
+                    <p class="desc">No messages yet.</p>
+                    {% endfor %}
                 </div>
             </section>
 
             <section class="projects-section">
-                <h3 class="section-title">Project Performance</h3>
-                <div class="project-list">
+                <h3 class="section-title">Latest Projects</h3>
+                <div class="projects-list">
+                    {% for p in recent_projects %}
                     <div class="project-row">
-                        <span class="project-name">E-Commerce Site</span>
-                        <div class="project-progress"><div class="progress-bar" style="width: 85%;"></div></div>
-                        <span class="project-metric">85%</span>
+                        <span class="project-name">{{ p.title }}</span>
+                        <span class="status-badge {% if p.is_featured %}featured{% endif %}">
+                            {% if p.is_featured %}Featured{% else %}Hidden{% endif %}
+                        </span>
+                        <span class="project-metric">{{ p.date_completed|date:"M Y" }}</span>
                     </div>
+                    {% empty %}
+                    <p class="desc">No projects yet.</p>
+                    {% endfor %}
                 </div>
             </section>
         </div>
     </main>
 
-    <script>
-        lucide.createIcons();
-    </script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>

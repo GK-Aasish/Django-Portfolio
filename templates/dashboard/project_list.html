@@ -11,36 +11,31 @@
 </head>
 <body>
 
-    <!-- 1. THE HEADER (Now contains everything) -->
     <header class="logo-container">
         <div class="logo">
             <span>A</span>
             <h1>Aasish Karki</h1>
         </div>
-
-        <!-- NEW: Navigation links moved from sidebar to here -->
         <nav class="nav-menu">
-            <a href="{% url 'dashboard:index' %}" class="nav-link">
-                <i data-lucide="layout-dashboard"></i><span>Overview</span>
-            </a>
-            <a href="{% url 'dashboard:project_list' %}" class="nav-link active">
-                <i data-lucide="folder-kanban"></i><span>Projects</span>
-            </a>
-            <a href="{% url "dashboard:messages" %}" class="nav-link">
-                <i data-lucide="message-square"></i><span>Messages</span>
-            </a>
+            <a href="{% url 'dashboard:index' %}" class="nav-link"><i data-lucide="layout-dashboard"></i><span>Overview</span></a>
+            <a href="{% url 'dashboard:project_list' %}" class="nav-link active"><i data-lucide="folder-kanban"></i><span>Projects</span></a>
+            <a href="{% url 'dashboard:messages' %}" class="nav-link"><i data-lucide="message-square"></i><span>Messages</span></a>
         </nav>
-
         <nav class="header-right">
             <a href="{% url 'dashboard:logout' %}" class="logout-btn">Logout</a>
         </nav>
     </header>
 
-    <!-- 3. MAIN CONTENT -->
     <main class="dashboard-content">
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
         <header class="content-header">
             <h2 class="page-title">Projects</h2>
-            <!-- CREATE BUTTON -->
             <a href="{% url 'dashboard:project_create' %}" class="btn-primary">
                 <i data-lucide="plus"></i> Add New Project
             </a>
@@ -57,24 +52,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Inside your <tbody> loop -->
                     {% for project in projects %}
                     <tr>
                         <td class="font-bold">{{ project.title }}</td>
-                        
                         <td>
-                            <!-- Call the method we created in models.py -->
                             {% for tag in project.get_tags_list %}
                                 <span class="tag">{{ tag }}</span>
                             {% endfor %}
                         </td>
-                        
-                        <td><span class="status-badge">Active</span></td>
+                        <td>
+                            <span class="status-badge {% if project.is_featured %}featured{% endif %}">
+                                {% if project.is_featured %}Featured{% else %}Hidden{% endif %}
+                            </span>
+                        </td>
                         <td class="text-right">
-                            <a href="{% url 'dashboard:project_update' project.id %}" class="action-btn edit"><i data-lucide="edit-3"></i></a>
-                            <a href="{% url 'dashboard:project_delete' project.id %}" class="action-btn delete"><i data-lucide="trash-2"></i></a>
+                            <a href="{% url 'dashboard:project_update' project.id %}" class="action-btn edit" title="Edit"><i data-lucide="edit-3"></i></a>
+                            <a href="{% url 'dashboard:project_delete' project.id %}" class="action-btn delete" title="Delete"><i data-lucide="trash-2"></i></a>
                         </td>
                     </tr>
+                    {% empty %}
+                    <tr><td colspan="4">No projects yet. Add your first one.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>

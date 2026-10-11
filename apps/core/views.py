@@ -1,181 +1,86 @@
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
-from django.conf import settings
+import logging
 from uuid import UUID
+
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.core.validators import validate_email
+from django.shortcuts import redirect, render
 
 from apps.dashboard.models import Project
 from .models import ContactMessage
 
+logger = logging.getLogger(__name__)
+
 
 def index(request):
-    return render( request,'core/index.html')
+    return render(request, "core/index.html")
+
 
 def projects(request):
-
     # Only show featured projects
-    projects = Project.objects.filter(is_featured=True)
+    projects = Project.objects.filter(is_featured=True).order_by("-date_completed")
+    return render(request, "core/projects.html", {"projects": projects})
 
-    return render(request,'core/projects.html',{'projects': projects})
 
 def about(request):
-    return render(request,'core/about.html')
+    return render(request, "core/about.html")
+
 
 def contact(request):
-    if request.method == "POST":
-        # -------------------------------------------------
-        # GET FORM DATA
-        # -------------------------------------------------
-        name = request.POST.get("name","").strip()
+    if request.method != "POST":
+        return render(request, "core/contact.html")
 
-        email = request.POST.get(
-            "email",
-            ""
-        ).strip()
+    data = {
+        key: request.POST.get(key, "").strip()
+        for key in ("name", "email", "subject", "message")
+    }
 
-        subject = request.POST.get(
-            "subject",
-            ""
-        ).strip()
+    def fail(msg):
+        # Keep what the visitor typed so they do not lose it
+        return render(request, "core/contact.html", {"error": msg, "form_data": data})
 
-        message = request.POST.get(
-            "message",
-            ""
-        ).strip()
+    # Token check (stops double submit)
+    try:
+        token = UUID(request.POST.get("submission_token", ""))
+    except (ValueError, TypeError):
+        return fail("Invalid form submission. Please try again.")
 
-        submission_token = request.POST.get(
-            "submission_token"
-        )
+    if ContactMessage.objects.filter(submission_token=token).exists():
+        return redirect("contact_success")
 
+    # Validation
+    if not data["name"] or not data["email"] or not data["message"]:
+        return fail("Please fill in all required fields.")
+    if len(data["name"]) > 100 or len(data["subject"]) > 200:
+        return fail("Name or subject is too long.")
+    try:
+        validate_email(data["email"])
+    except ValidationError:
+        return fail("Please enter a valid email address.")
 
-        # -------------------------------------------------
-        # VALIDATE SUBMISSION TOKEN
-        # -------------------------------------------------
+    ContactMessage.objects.create(submission_token=token, **data)
 
-        if not submission_token:
-
-            return render(
-                request,
-                "core/contact.html",
-                {
-                    "error": "Invalid form submission. Please try again."
-                }
-            )
-
-
-        try:
-
-            token = UUID(submission_token)
-
-        except (ValueError, TypeError):
-
-            return render(
-                request,
-                "core/contact.html",
-                {
-                    "error": "Invalid form submission. Please try again."
-                }
-            )
-
-
-        # -------------------------------------------------
-        # CHECK IF THIS EXACT SUBMISSION WAS ALREADY PROCESSED
-        # -------------------------------------------------
-
-        if ContactMessage.objects.filter(
-            submission_token=token
-        ).exists():
-
-            return redirect(
-                "contact_success"
-            )
-
-
-        # -------------------------------------------------
-        # BASIC VALIDATION
-        # -------------------------------------------------
-
-        if not name or not email or not message:
-
-            return render(
-                request,
-                "core/contact.html",
-                {
-                    "error": "Please fill in all required fields."
-                }
-            )
-
-
-        # -------------------------------------------------
-        # SAVE MESSAGE
-        # -------------------------------------------------
-
-        ContactMessage.objects.create(
-
-            name=name,
-
-            email=email,
-
-            subject=subject,
-
-            message=message,
-
-            submission_token=token
-
-        )
-
-
-        # -------------------------------------------------
-        # SEND EMAIL NOTIFICATION
-        # -------------------------------------------------
-
+    # Email is a bonus. Message is already saved, so never show a 500 if mail fails.
+    try:
         send_mail(
-
-            subject=(
-                f"Portfolio Contact: "
-                f"{subject or 'New Message'}"
+            subject=f"Portfolio Contact: {data['subject'] or 'New Message'}",
+            message=(
+                "You received a new message from your portfolio.\n\n"
+                f"Name: {data['name']}\n"
+                f"Email: {data['email']}\n"
+                f"Subject: {data['subject'] or 'No Subject'}\n\n"
+                f"Message:\n\n{data['message']}\n"
             ),
-
-            message=f"""
-            You received a new message from your portfolio.
-
-            Name: {name}
-            Email: {email}
-            Subject: {subject or 'No Subject'}
-
-            Message:
-
-            {message}
-            """,
-
             from_email=settings.DEFAULT_FROM_EMAIL,
-
-            recipient_list=[
-                settings.CONTACT_EMAIL
-            ],
-
+            recipient_list=[settings.CONTACT_EMAIL],
             fail_silently=False,
-
         )
+    except Exception:
+        logger.exception("Contact email failed to send")
 
-
-        # -------------------------------------------------
-        # SUCCESS
-        # -------------------------------------------------
-
-        return redirect(
-            "contact_success"
-        )
-
-
-    return render(
-        request,
-        "core/contact.html"
-    )
+    return redirect("contact_success")
 
 
 def contact_success(request):
-
-    return render(
-        request,
-        "core/contact_success.html"
-    )
+    return render(request, "core/contact_success.html")

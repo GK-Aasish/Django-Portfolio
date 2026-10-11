@@ -7,6 +7,81 @@
     <title>Projects | Aasish Karki</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== Scroll hint (floats over the project cards) ===== */
+        .scroll-hint {
+            position: fixed;
+            bottom: 28px;
+            left: 71%;                      /* centre of the right-hand column */
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 22px 12px 16px;
+            background: #111;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            pointer-events: none;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            animation: hintFloat 2s ease-in-out infinite;
+        }
+        .scroll-hint.hidden {
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px);
+            animation: none;
+        }
+        /* little mouse with a moving wheel */
+        .scroll-hint-mouse {
+            position: relative;
+            width: 18px;
+            height: 28px;
+            border: 2px solid #ff4c60;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+        .scroll-hint-mouse::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            width: 3px;
+            height: 6px;
+            margin-left: -1.5px;
+            border-radius: 3px;
+            background: #ff4c60;
+            animation: hintWheel 1.6s ease-in-out infinite;
+        }
+        .scroll-hint-arrow {
+            width: 16px;
+            height: 16px;
+            color: #ff4c60;
+            animation: hintArrow 1.2s ease-in-out infinite;
+        }
+        @keyframes hintFloat {
+            0%, 100% { margin-bottom: 0; }
+            50%      { margin-bottom: 8px; }
+        }
+        @keyframes hintWheel {
+            0%   { opacity: 0; transform: translateY(0); }
+            30%  { opacity: 1; }
+            100% { opacity: 0; transform: translateY(10px); }
+        }
+        @keyframes hintArrow {
+            0%, 100% { transform: translateY(-2px); }
+            50%      { transform: translateY(3px); }
+        }
+        @media (max-width: 768px) {
+            .scroll-hint { left: 50%; bottom: 20px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .scroll-hint, .scroll-hint-mouse::after, .scroll-hint-arrow { animation: none; }
+        }
+    </style>
 </head>
 <body>
 
@@ -23,16 +98,14 @@
         </nav>
     </header>
 
-    <!-- The container for the whole page -->
     <div class="projects-page">
-        
-        <!-- LEFT SIDE: Fixed while scrolling -->
+
         <aside class="projects-intro">
             <div class="intro-content">
                 <span class="section-label">My Portfolio</span>
                 <h1>Selected <span>Works</span></h1>
                 <p>A deep dive into my creative process and technical execution.</p>
-                
+
                 <div class="scroll-indicator">
                     <span></span>
                     <p>Scroll</p>
@@ -40,16 +113,14 @@
             </div>
         </aside>
 
-        <!-- RIGHT SIDE: The scrolling list of cards -->
         <section class="projects-showcase">
             <div class="projects-list">
 
-                <!-- Card -->
                 {% for project in projects %}
                 <div class="project-card">
                     <div class="project-image">
                         {% if project.image %}
-                        <img src="{{ project.image.url }}" alt="{{ project.name }}">
+                        <img src="{{ project.image.url }}" alt="{{ project.title }}">
                         {% else %}
                         <img src="{% static 'images/default_project.png' %}" alt="Default Project Image">
                         {% endif %}
@@ -60,57 +131,51 @@
                             <span>{{ tag }}</span>
                             {% endfor %}
                         </div>
-                        <h2>{{project.title}}</h2>
-                        <p>{{project.description}}</p>
+                        <h2>{{ project.title }}</h2>
+                        <p>{{ project.description }}</p>
                         <div class="project-links">
-                            {% if project.live_demo_url %}
-                            <a href="{{ project.live_demo_url }}" class="btn-link" target="_blank">Live Demo</a>
+                            {% if project.live_preview_url %}
+                            <a href="{{ project.live_preview_url }}" class="btn-link" target="_blank" rel="noopener noreferrer">Live Demo</a>
                             {% endif %}
                             {% if project.source_code_url %}
-                            <a href="{{ project.source_code_url }}" class="btn-github" target="_blank">GitHub</a>
+                            <a href="{{ project.source_code_url }}" class="btn-github" target="_blank" rel="noopener noreferrer">GitHub</a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <p>No projects available.</p>
+                <p>No projects available yet. Check back soon.</p>
                 {% endfor %}
-
-                {% comment %} <!-- Card 2 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="project2.png" alt="Project 2">
-                    </div>
-                    <div class="project-info">
-                        <div class="project-tags"><span>Blender</span><span>WebGl</span></div>
-                        <h2>Abstract 3D Art</h2>
-                        <p>Exploring light and shadow through procedural 3D generation.</p>
-                        <div class="project-links">
-                            <a href="#" class="btn-link">View Case Study</a>
-                            <a href="#" class="btn-github">GitHub</a>
-                        </div>
-                    </div>
-                </div> {% endcomment %}
-
-                {% comment %} <!-- Card 3 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="project3.png" alt="Project 3">
-                    </div>
-                    <div class="project-info">
-                        <div class="project-tags"><span>Node.js</span><span>MongoDB</span></div>
-                        <h2>Backend API Engine</h2>
-                        <p>A robust, scalable API architecture for enterprise applications.</p>
-                        <div class="project-links">
-                            <a href="#" class="btn-link">Live Demo</a>
-                            <a href="#" class="btn-github">GitHub</a>
-                        </div>
-                    </div>
-                </div> {% endcomment %}
 
             </div>
         </section>
     </div>
+
+    <!-- Floating scroll hint. JS hides it after the visitor scrolls. -->
+    <div class="scroll-hint hidden" id="scrollHint" aria-hidden="true">
+        <span class="scroll-hint-mouse"></span>
+        <span>Scroll to see {% if projects|length > 1 %}all {{ projects|length }} projects{% else %}more{% endif %}</span>
+        <svg class="scroll-hint-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </div>
+
+    <script>
+        (function () {
+            const hint = document.getElementById('scrollHint');
+            if (!hint) return;
+
+            function update() {
+                const doc = document.documentElement;
+                const canScroll = doc.scrollHeight - window.innerHeight > 120;
+                const scrolledAway = window.scrollY > 120;
+                hint.classList.toggle('hidden', !canScroll || scrolledAway);
+            }
+
+            window.addEventListener('scroll', update, { passive: true });
+            window.addEventListener('resize', update);
+            window.addEventListener('load', update);  // wait for images, then measure
+            update();
+        })();
+    </script>
 
 </body>
 </html>

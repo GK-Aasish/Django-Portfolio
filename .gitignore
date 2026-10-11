@@ -1,7 +1,64 @@
-port/
-__pychache__/
-*.pyc
+# ---------- Secrets (NEVER push) ----------
 .env
-staticfiles/
-media/
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# ---------- Virtual environments ----------
+virtual/
+
+# ---------- Django ----------
 db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+*.log
+logs/
+local_settings.py
+
+# Uploaded files (project images). Keep these out of git.
+media/
+
+# Output of `collectstatic`. Your real source is `static/`, keep that.
+staticfiles/
+
+# ---------- Testing / coverage ----------
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# ---------- Node (if you add a build step later) ----------
+node_modules/
+npm-debug.log*
+
+# ---------- Editors / IDEs ----------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ---------- OS junk ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Misc ----------
+port/
+*.bak
+*.tmp

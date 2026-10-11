@@ -1569,3 +1569,66 @@ body {
     }
 
 }
+
+
+/* ===== APPEND THIS TO THE BOTTOM OF static/css/admin.css ===== */
+
+/* Page header row (title + add button) */
+.content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+.content-header .btn-primary { margin-bottom: 0; }
+
+.section-title { font-size: 20px; font-weight: 700; margin-bottom: 25px; }
+.font-bold { font-weight: 600; color: #111; }
+.text-right { text-align: right !important; }
+.action-btn + .action-btn { margin-left: 6px; }
+
+/* Status badge */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #f1f5f9;
+    color: #64748b;
+}
+.status-badge.featured { background: #ecfdf5; color: #059669; }
+
+/* Flash messages and errors */
+.alert {
+    padding: 14px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    background: #f1f5f9;
+    color: #334155;
+}
+.alert.success { background: #ecfdf5; color: #059669; }
+.alert.error   { background: #fef2f2; color: #dc2626; }
+.error-text { color: #dc2626; font-size: 13px; }
+
+/* Form bits that were missing */
+.form-group input[type="checkbox"] { width: 18px; height: 18px; padding: 0; margin-left: 12px; accent-color: var(--primary); }
+.form-group.checkbox-row label { margin-right: 4px; }
+.placeholder-icon { text-align: center; color: #bbb; font-size: 13px; }
+.placeholder-icon svg { width: 32px; height: 32px; margin-bottom: 8px; }
+.file-upload-wrapper .error-text { margin-top: 4px; }
+.timeline-content .desc a { color: inherit; text-decoration: none; }
+.timeline-content .desc a:hover { color: var(--primary); }
+
+/* Dashboard on small screens */
+@media (max-width: 900px) {
+    .logo-container { padding: 0 20px; }
+    .logo h1, .nav-link span { display: none; }
+    .nav-menu { gap: 10px; }
+    .dashboard-content { padding: calc(var(--header-height) + 25px) 20px 30px; }
+    .stats-row { grid-template-columns: 1fr; }
+    .dashboard-flow { flex-direction: column; }
+    .table-container { overflow-x: auto; }
+}
